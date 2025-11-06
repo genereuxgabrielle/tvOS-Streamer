@@ -6,27 +6,24 @@
 //
 
 import SwiftUI
-import ThemeKit
 
 struct CardView: View {
     let content: Content
     var body: some View {
-        VStack {
+        VStack(alignment: .leading, spacing: 8) {
             Spacer()
-            HStack {
-                Text(content.title)
-                    .font(.subheadline)
-                    .lineLimit(1)
-                    .accessibilityAddTraits(.isHeader)
-                Spacer()
-                Label("\(content.duration)", systemImage: "clock")
-                    .font(.caption)
-            }
+            Text(content.title)
+                .font(.headline)
+                .lineLimit(2)
+                .accessibilityAddTraits(.isHeader)
+            Text(content.overview ?? "No description available")
+                .font(.caption)
+                .lineLimit(2)
+                .foregroundColor(.secondary)
         }
         .padding(20)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-        .background(content.theme.mainColor)
-        .foregroundColor(content.theme.accentColor)
+        .background(Color.gray.opacity(0.2))
         .cornerRadius(12)
         .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 4)
     }

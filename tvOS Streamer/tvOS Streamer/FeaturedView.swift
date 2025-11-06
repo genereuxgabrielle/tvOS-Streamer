@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import ThemeKit
 
 struct FeaturedView: View {
     @StateObject private var viewModel = ContentViewModel()
@@ -40,8 +39,10 @@ struct FeaturedView: View {
                     ScrollView(.horizontal) {
                         LazyHStack(spacing: 20) {
                             ForEach(viewModel.content) { content in
-                                CardView(content: content)
-                                    .frame(width: 400, height: 200)
+                                NavigationLink(destination: ContentDetailsView(content: content)) {
+                                    CardView(content: content)
+                                        .frame(width: 400, height: 200)
+                                }
                             }
                         }
                         .padding()
@@ -57,7 +58,18 @@ struct FeaturedView: View {
     
     private func loadContent() async {
         if let apiURL = apiURL {
-            await viewModel.fetchContent(from: apiURL)
+            // Use custom fetch with auth
+            let queryItems: [URLQueryItem] = [
+                URLQueryItem(name: "language", value: "en-US"),
+                URLQueryItem(name: "page", value: "1"),
+            ]
+            
+            let headers = [
+                "accept": "application/json",
+                "Authorization": APIConfig.tmdbAPIKey
+            ]
+            
+            await viewModel.fetchContentWithAuth(baseURL: apiURL, queryItems: queryItems, headers: headers)
         } else {
             // Fallback to sample data if no API URL provided
             viewModel.loadSampleData()
