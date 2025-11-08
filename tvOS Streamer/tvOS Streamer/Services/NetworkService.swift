@@ -42,5 +42,32 @@ class NetworkService {
             throw NetworkError.decodingError
         }
     }
+    
+    // New method that accepts a URLRequest for more control
+    func fetch<T: Decodable>(with request: URLRequest) async throws -> T {
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw NetworkError.noData
+        }
+        
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw NetworkError.serverError(statusCode: httpResponse.statusCode)
+        }
+        
+        do {
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            return try decoder.decode(T.self, from: data)
+        } catch {
+            throw NetworkError.decodingError
+        }
+    }
 }
+
+
+
+
+
+
 

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CardView: View {
     let content: Content
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Spacer()
@@ -23,9 +24,8 @@ struct CardView: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-        .background(Color.gray.opacity(0.2))
+        .background(Color.red)
         .cornerRadius(12)
-        .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 4)
     }
 }
 

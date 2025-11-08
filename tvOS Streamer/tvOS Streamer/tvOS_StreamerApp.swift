@@ -11,9 +11,11 @@ import SwiftUI
 struct tvOS_StreamerApp: App {
     var body: some Scene {
         WindowGroup {
-            // Pass nil or your API URL here
-            // Example: FeaturedView(apiURL: "https://your-api.com/content")
+            // Pass the Movie DB API URL to fetch popular movies
             FeaturedView()
+            
+            // Or use nil to load sample data for testing
+            // FeaturedView()
         }
     }
 }

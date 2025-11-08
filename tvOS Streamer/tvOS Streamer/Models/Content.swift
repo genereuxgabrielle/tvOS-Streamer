@@ -6,37 +6,45 @@
 //
 
 import Foundation
-import ThemeKit
+
+// Response wrapper that TMDB API returns
+struct TMDBResponse: Codable {
+    let page: Int
+    let results: [Content]
+    let totalPages: Int
+    let totalResults: Int
+}
 
 struct Content: Identifiable, Codable {
+    var id: Int
     var title: String
-    var duration: Int
-    var id: UUID
-    var theme: Theme
+    var overview: String?
+    var posterPath: String?
+    var backdropPath: String?
+    var releaseDate: String?
+    var voteAverage: Double?
+    var popularity: Double?
     
-    // CodingKeys to exclude theme from API decoding
     enum CodingKeys: String, CodingKey {
-        case title
-        case duration
         case id
+        case title
+        case overview
+        case posterPath
+        case backdropPath
+        case releaseDate
+        case voteAverage
+        case popularity
     }
     
-    init(id: UUID = UUID(), title: String, duration: Int, theme: Theme)
+    init(id: Int, title: String, overview: String)
     {
         self.id = id
         self.title = title
-        self.duration = duration
-        self.theme = theme
-    }
-    
-    // Custom decoder that assigns a theme after decoding
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        title = try container.decode(String.self, forKey: .title)
-        duration = try container.decode(Int.self, forKey: .duration)
-        id = try container.decode(UUID.self, forKey: .id)
-        
-        // Assign a random theme from available themes
-        theme = Theme.allCases.randomElement() ?? .oxblood
+        self.overview = overview
+        self.posterPath = nil
+        self.backdropPath = nil
+        self.releaseDate = nil
+        self.voteAverage = nil
+        self.popularity = nil
     }
 }
