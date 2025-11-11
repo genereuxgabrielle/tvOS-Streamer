@@ -2,8 +2,6 @@
 //  CardView.swift
 //  tvOS Streamer
 //
-//  Created by Gabrielle Genereux on 2025-11-02.
-//
 
 import SwiftUI
 
@@ -12,7 +10,6 @@ struct CardView: View {
     
     var body: some View {
         ZStack {
-            // Background image
             if let backdropPath = content.backdropPath,
                let imageURL = URL(string: "https://image.tmdb.org/t/p/w780\(backdropPath)") {
                 AsyncImage(url: imageURL) { image in
@@ -25,10 +22,6 @@ struct CardView: View {
                     Color.gray.opacity(0.3)
                         .frame(width: 400, height: 200)
                 }
-            } else {
-                // Fallback when no image
-                Color.gray.opacity(0.3)
-                    .frame(width: 400, height: 200)
             }
             
             LinearGradient(

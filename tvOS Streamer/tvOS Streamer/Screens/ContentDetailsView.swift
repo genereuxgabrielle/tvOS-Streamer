@@ -13,17 +13,15 @@ struct ContentDetailsView<T: Content>: View {
     @Environment(\.dismiss) private var dismiss
     
     var contentType: String {
-        if T.self == Movie.self {
-            return "movie"
-        } else if T.self == TVShow.self {
+        if T.self == TVShow.self {
             return "tv"
+        } else {
+            return "movie"
         }
-        return "movie" // fallback
     }
     
     var body: some View {
         ZStack {
-            // Background image - full screen
             if let backdropPath = content.backdropPath,
                let imageURL = URL(string: "https://image.tmdb.org/t/p/w1280\(backdropPath)") {
                 AsyncImage(url: imageURL) { image in
@@ -35,11 +33,8 @@ struct ContentDetailsView<T: Content>: View {
                     Color.gray.opacity(0.3)
                         .ignoresSafeArea()
                 }
-            } else {
-                // Fallback when no image
-                Color.gray.opacity(0.3)
-                    .ignoresSafeArea()
             }
+
             LinearGradient(
                 colors: [Color.clear, Color.black],
                 startPoint: .top,
@@ -63,19 +58,19 @@ struct ContentDetailsView<T: Content>: View {
                 Spacer().frame(height: 50)    
 
                 if viewModel.isLoading {
-                ProgressView("Loading details...")
+                    ProgressView("Loading details...")
                 } else if let errorMessage = viewModel.errorMessage {
-                VStack(spacing: 20) {
-                    Image(systemName: "exclamationmark.triangle")
+                    VStack(spacing: 20) {
+                        Image(systemName: "exclamationmark.triangle")
                         .font(.system(size: 60))
-                    Text(errorMessage)
+                        Text(errorMessage)
                         .font(.headline)
-                    Button("Retry") {
-                        Task {
-                            await loadDetails()
+                        Button("Retry") {
+                            Task {
+                                await loadDetails()
+                            }
                         }
                     }
-                }
                 } else if let detailedContent = viewModel.content.first {
                     VStack(alignment: .leading, spacing: 20) {
                         Text(detailedContent.displayTitle)
@@ -86,8 +81,6 @@ struct ContentDetailsView<T: Content>: View {
                     // Add more details here (release date, rating, etc.)
                     }
                     .padding()
-                } else {
-                    Text("No details available")
                 }
             }
             .task {

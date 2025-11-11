@@ -2,8 +2,6 @@
 //  ContentViewModel.swift
 //  tvOS Streamer
 //
-//  Created by Gabrielle Genereux on 2025-11-04.
-//
 
 import Foundation
 import Combine

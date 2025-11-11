@@ -1,9 +1,7 @@
 //
 //  tvOS_StreamerApp.swift
 //  tvOS Streamer
-//
-//  Created by Gabrielle Genereux on 2025-10-29.
-//
+
 
 import SwiftUI
 
