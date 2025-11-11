@@ -5,8 +5,8 @@
 
 import SwiftUI
 
-struct CarouselView: View {
-    @StateObject private var viewModel = ContentViewModel()
+struct CarouselView<T: Content>: View {
+    @StateObject private var viewModel = ContentViewModel<T>()
     let apiURL: String?
     let title: String
     
@@ -14,10 +14,13 @@ struct CarouselView: View {
         self.apiURL = apiURL
         self.title = title
     }
+    @Namespace private var carouselNamespace
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text(title)
-                .font(.title2)            
+                .font(.title2)
+                .focusable(false)  // Title shouldn't be focusable
             Group {
                 if viewModel.isLoading {
                     ProgressView("Loading...")
@@ -39,16 +42,18 @@ struct CarouselView: View {
                 } else {
                     ScrollView(.horizontal) {
                         LazyHStack(spacing: 40) {
-                            ForEach(viewModel.content) { content in
+                            ForEach(Array(viewModel.content.enumerated()), id: \.element.id) { index, content in
                                 NavigationLink(destination: ContentDetailsView(content: content)) {
                                     CardView(content: content)
                                         .frame(width: 400, height: 200)
                                 }
                                 .buttonStyle(.plain)
+                                .prefersDefaultFocus(index == 0, in: carouselNamespace)
                             }
                         }
                         .padding(.horizontal)
                     }
+                    .focusSection()
                     .scrollClipDisabled()
                     .frame(height: 220)
                 }
@@ -72,12 +77,10 @@ struct CarouselView: View {
             ]
             
             await viewModel.fetchContentWithAuth(baseURL: apiURL, queryItems: queryItems, headers: headers)
-        } else {
-            // Fallback to sample data if no API URL provided
-            viewModel.loadSampleData()
         }
     }
 }
+
 #Preview {
-    CarouselView(title: "Featured")
+    CarouselView<Movie>(title: "Featured")
 }
